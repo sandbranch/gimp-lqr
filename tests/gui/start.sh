@@ -9,6 +9,7 @@
 # GIMP fails.
 here=$(cd "$(dirname "$0")" && pwd)
 tests=$(dirname "$here")
+src=$(dirname "$tests")
 [ -d "$tests/output/profile/plug-ins/gimp-lqr-plugin" ] ||
   { echo "run tests/run.sh first: it installs the plug-in into tests/output/profile" >&2; exit 1; }
 GIMP_RUN_HOME=${GIMP_RUN_HOME:-$tests/output/gimp-home}
