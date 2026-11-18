@@ -1,13 +1,12 @@
 #!/bin/sh
-# Builds the Liquid Rescale plug-in into tests/output and tests it inside
-# the Flatpak GIMP without a window (see lqr-test.py). GIMP runs with a
+# Builds the Liquid Rescale plug-in into tests/output and tests it in
+# the native GIMP without a window (see lqr-test.py). GIMP runs with a
 # throwaway profile in tests/output/profile (GIMP3_DIRECTORY), where the
 # plug-in is installed: your own GIMP profile and plug-ins are not used or
 # changed, and a running GIMP of yours does not matter. The build and
 # GIMP run isolated from your folders (tests/isolate.sh, with
-# gimp-devtools/gimp-run.sh): HOME and the XDG folders inside the
-# Flatpak point into tests/output/gimp-home, so nothing lands in
-# ~/.var/app/org.gimp.GIMP either. Before and after, it lists your
+# gimp-devtools/gimp-run.sh): HOME and the XDG folders point into
+# tests/output/gimp-home. Before and after, it lists your
 # folders of GIMP and the other apps (gimp-devtools/snapshot.sh)
 # and fails if anything there changed.
 #
@@ -38,10 +37,9 @@ if [ "$1" = --asan ]; then
     build=$out/build-asan
     profile=$out/profile-asan
     setup_args="-Db_sanitize=address,undefined -Db_lundef=false"
-    # the sanitizer runtimes are in the SDK, which --devel runs GIMP with.
     # Leak reports (LQR_LEAKS=1) are off by default: libgimp and liblqr
     # leak a few small blocks each run that are not the plug-in's.
-    run_args="--devel --env=ASAN_OPTIONS=log_path=$out/sanitizer/asan:detect_leaks=${LQR_LEAKS:-0} \
+    run_args="--env=ASAN_OPTIONS=log_path=$out/sanitizer/asan:detect_leaks=${LQR_LEAKS:-0} \
       --env=UBSAN_OPTIONS=log_path=$out/sanitizer/ubsan:print_stacktrace=1"
 fi
 rm -rf "$out/sanitizer"
@@ -59,7 +57,7 @@ fi
   >"$out/build.log" 2>&1 || { cat "$out/build.log"; exit 1; }
 
 # shellcheck disable=SC2086
-gimp_run --timeout=1800 --flatpak $run_args --filesystem="$src" --env=GIMP3_DIRECTORY="$profile" \
+gimp_run --timeout=1800 $run_args --env=GIMP3_DIRECTORY="$profile" \
   --env=LQR_ONLY="$LQR_ONLY" -- \
   gimp-console-3.2 --no-interface --no-data --batch-interpreter python-fu-eval \
   -b "exec(open('$here/lqr-test.py').read())" --quit >"$log" 2>&1

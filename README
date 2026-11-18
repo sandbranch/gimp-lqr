@@ -35,16 +35,21 @@ Layer > Liquid rescale..., and plug-in-lqr in the procedure browser.
 The INSTALL file is the generic text of autotools, which this branch no
 longer uses.
 
-For the Flatpak GIMP, gimp-devtools/gimp-build.sh (from
-github.com/sandbranch/gimp-devtools, next to this folder) runs the
-same commands inside the GNOME SDK that GIMP was built with.
+This needs the native GIMP 3 and its development files, plus meson and
+ninja; on Debian and Ubuntu:
+
+    sudo apt install gimp libgimp-3.0-dev meson ninja-build
+
+The tests build through
+gimp-devtools/gimp-build.sh (from github.com/sandbranch/gimp-devtools,
+next to this folder).
 
 Tests
 -----
 
     tests/run.sh          # or tests/run.sh --asan
 
-builds the plug-in into tests/output and tests it in the Flatpak GIMP
+builds the plug-in into tests/output and tests it in the native GIMP
 without a window, with a throwaway GIMP profile in tests/output: your
 own profile and plug-ins are not touched. It prints PASS or FAIL for each
 case and exits non-zero on any failure. tests/gui/ opens the dialog on a

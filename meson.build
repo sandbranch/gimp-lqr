@@ -19,7 +19,7 @@ gimp_required_version = '>= 3.0.0'
 gimp_dep = dependency('gimp-3.0', version : gimp_required_version)
 gimpui_dep = dependency('gimpui-3.0', version : gimp_required_version)
 # liblqr: the system library, or built from source and linked in, which
-# makes the plug-in independent of the system (e.g. in Flatpak)
+# makes the plug-in independent of the system's liblqr
 if get_option('bundled_liblqr').enabled()
   lqr_dep = subproject('liblqr').get_variable('liblqr_dep')
 else
